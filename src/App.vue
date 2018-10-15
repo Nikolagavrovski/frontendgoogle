@@ -1,16 +1,14 @@
 
 <script>
-import {mapGetters} from 'vuex'
+
 import NavBar from './components/NavBar'
 export default {
   components: {
     NavBar
   },
   computed: {
-    ...mapGetters([
-      'isLoggedIn',
-      'authStatus'
-    ])
+
+
   },
   created () {
     //console.log('App.vue is created')
@@ -28,5 +26,6 @@ export default {
   <div>
     <NavBar/>
     <router-view></router-view>
+
   </div>
 </template>

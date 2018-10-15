@@ -2,8 +2,8 @@ import {getUserToken, getUserObject} from './../../config'
 
 const state = {
   status: '',
-  token: window.localStorage.getItem('user.access_token') || '',
-  user: {}
+  token: localStorage.getItem('token') || '',
+  user: ''
 }
 
 const mutations = {
@@ -11,6 +11,9 @@ const mutations = {
     state.status = 'loading'
   },
   AUTH_SUCCESS(state, token, user){
+    console.log(user)
+    console.log(state)
+    console.log(token)
     state.status = 'success'
     state.token = token
     state.user = user
@@ -33,23 +36,20 @@ const actions = {
           data: user, 
           method: 'POST'
         }).then(resp => {
+          console.log(resp)
+            //const user = {}
             const token = resp.data.access_token
-            //window.localStorage.setItem('user', JSON.stringify(user))
-            //window.localStorage.setItem('token', JSON.stringify(user.access_token))
-            //console.log(resp)
-            axios.get(getUserObject, {headers: 
-            {
-              'Access': "application/json",
-              'Authorization': 'Bearer ' + token
-            }})
+            //user.access_token = resp.data.access_token
+            axios.get(getUserObject, {headers: {'Access': "application/json",'Authorization': 'Bearer ' + token}})
             .then(resp =>{
-              console.log(resp)
-              localStorage.setItem('token', token)
+              const userObject = "12cwckporakpowxr12"
+              //user.name = resp.data.name
               //user.email = resp.data.email
-              //window.localStorage.setItem('user', JSON.stringify(user)
-              
-              commit('AUTH_SUCCESS', token, resp.data)
-              console.log(resp.data)
+              window.localStorage.setItem('token', token)
+              window.localStorage.setItem('user', userObject)
+              //localStorage.setItem('user', JSON.stringify(user))
+              console.log(userObject)
+              commit('AUTH_SUCCESS', token, userObject)
               resolve(resp)
             })
         })

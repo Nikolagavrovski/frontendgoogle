@@ -35,7 +35,7 @@ const router = new VueRouter ({
   routes
 })
 
-router.beforeEach((to, from, next) => {
+/*router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth) {
     const user = JSON.parse(window.localStorage.getItem('user'))
     if (user && user.access_token) {
@@ -45,7 +45,7 @@ router.beforeEach((to, from, next) => {
 }
    next()
 })
-
+*/
 new Vue({
   router, store
 }).$mount('#app')

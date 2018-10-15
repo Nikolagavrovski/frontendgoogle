@@ -86,7 +86,7 @@ export default {
     onSubmit () {
             let username = this.form.username
             let email = this.form.email
-		   	let password = this.form.password
+		   	    let password = this.form.password
       
       this.$store.dispatch('getToken', {postData})        
       .then(() =>this.$router.push('dashboard')
