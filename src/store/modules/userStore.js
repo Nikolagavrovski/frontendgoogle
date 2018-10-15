@@ -1,4 +1,4 @@
-import {getUserToken, getUserObject} from './../../config'
+import {getUserToken, getUserObject, userRegister} from './../../config'
 
 const state = {
   status: '',
@@ -63,7 +63,7 @@ const actions = {
 register({commit}, user){
   return new Promise((resolve, reject) => {
         commit('AUTH_REQUEST')
-        axios({url: 'http://localhost:3000/register', data: user, method: 'POST' })
+        axios({url: userRegister, data: user, method: 'POST', headers: {'Accept': 'application/json'}})
         .then(resp => {
             console.log(resp);
             const token = resp.data.token
@@ -71,11 +71,11 @@ register({commit}, user){
            // window.localStorage.setItem('token', token)
             // Add the following line:
             axios.defaults.headers.common['Authorization'] = token
-            commit('AUTH_ERROR', token, user)
+            commit('AUTH_SUCCESS', token, user)
             resolve(resp)
         })
         .catch(err => {
-            commit('auth_error', err)
+            commit('AUTH_ERROR', err)
             window.localStorage.removeItem('token')
             reject(err)
         })

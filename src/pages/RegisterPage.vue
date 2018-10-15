@@ -88,10 +88,10 @@ export default {
             let email = this.form.email
 		   	    let password = this.form.password
       
-      this.$store.dispatch('getToken', {postData})        
-      .then(() =>this.$router.push('dashboard')
-      .catch(err => console.log(err))
-      )
+      this.$store.dispatch('userStore/register', {username, email, password})
+        .then(() => {
+          this.$router.push('dashboard')
+        })
     }
   }
 }
