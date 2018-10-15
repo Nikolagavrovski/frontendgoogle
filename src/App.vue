@@ -1,30 +1,27 @@
 
 <script>
-import {mapState} from 'vuex'
-import NavBar from './components/user/NavBar'
+import {mapGetters} from 'vuex'
+import NavBar from './components/NavBar'
 export default {
   components: {
     NavBar
   },
   computed: {
-    ...mapState({
-      userStore: state => state.userStore
-    })
+    ...mapGetters([
+      'isLoggedIn',
+      'authStatus'
+    ])
   },
   created () {
-    console.log('App.vue is created')
-    const userObj = JSON.parse(window.localStorage.getItem('authUser'))
-    this.$store.dispatch('setUserObject', userObj)
+    //console.log('App.vue is created')
+    //const userObj = JSON.parse(window.localStorage.getItem('authUser'))
+    //this.$store.dispatch('setUserObject', userObj)
   }
 }
 </script>
 
-<style>
-  @import url('https://fonts.googleapis.com/css?family=Lato:400,700');
-  body {
-    background: #EEF1F4;
-    font-family: 'Lato', sans-sans-serif;
-  }
+<style lang="scss">
+  @import '../node_modules/bootstrap/scss/bootstrap.scss';
 </style>
 
 <template>

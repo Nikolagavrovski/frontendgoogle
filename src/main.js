@@ -11,8 +11,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import DashboardPage from './pages/DashboardPage'
-import ChatPage from './pages/ChatPage'
-import store from './store'
+import store from './store/store'
 
 Vue.use(BootstrapVue)
 Vue.use(VueRouter)
@@ -26,7 +25,7 @@ Vue.component('app', App)
 const routes = [
   {path: '/', component: LoginPage, name: 'home'},
   {path: '/dashboard', component: DashboardPage, name: 'dashboard', meta: {requiresAuth: true}},
-  {path: '/chat', component: ChatPage, name: 'chat', meta: {requiresAuth: true}},
+  //{path: '/chat', component: ChatPage, name: 'chat', meta: {requiresAuth: true}},
   {path: '/register', component: RegisterPage, name: 'register'},
   { path: '*', redirect: '/' } // implement 'Page not found'
 ]
@@ -37,27 +36,16 @@ const router = new VueRouter ({
 })
 
 router.beforeEach((to, from, next) => {
-
   if (to.meta.requiresAuth) {
-    const authUser = JSON.parse(window.localStorage.getItem('authUser'))
-      if (authUser && authUser.access_token) {
+    const user = JSON.parse(window.localStorage.getItem('user'))
+    if (user && user.access_token) {
       next()
     } else { next({name: 'home'})
-    }
   }
+}
    next()
 })
 
 new Vue({
   router, store
 }).$mount('#app')
-
-
-/* eslint-disable no-new
-new Vue({
-  el: '#app',
-  components: { App },
-  template: '<App/>'
-})
-
-*/

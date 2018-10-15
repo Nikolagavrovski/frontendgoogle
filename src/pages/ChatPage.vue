@@ -1,18 +1,9 @@
 <script>
 import ChatUserList from './../components/chat/ChatUserList'
-import {mapState, mapActions} from 'vuex'
 
 export default {
   components: {
     'user-list': ChatUserList
-  },
-  computed: {
-    ...mapState({
-      chatStore: state => state.chatStore
-    })
-  },
-  created () {
-    this.$store.dispatch('setUserList')
   }
 }
 </script>
@@ -30,6 +21,5 @@ export default {
           Show the chat content
         </b-col>
       </b-row>
-    </b-col>
   </b-container>
 </template>

@@ -1,71 +1,4 @@
-<script>
-import {loginUrl, getHeader, userUrl} from './../config'
-import {clientId, clientSecret} from './../env'
-import {mapState} from 'vuex'
-export default {
-  computed: {
-    ...mapState({
-      userStore: state => state.userStore
-    })
-  },
-  data () {
-    return {
-      form: {
-        currentEmail: 'nikolagavr@gmail.com',
-        currentPassword: 'password',
-        },
-      show: true,
-      showDismissibleAlert: false
-    }
-  },
-  methods: {
 
-    onSubmit (evt) {
-      evt.preventDefault();
-      const postData = {
-        grant_type: 'password',
-        client_id: clientId,
-        client_secret: clientSecret,
-        username: this.form.currentEmail,
-        password: this.form.currentPassword,
-        scope: ''
-      }
-      const authUser = {}
-        axios.post(loginUrl, postData)
-        .then(response =>{
-          if(response.status = 200){
-            console.log('Oath token: ', response)
-            authUser.access_token = response.data.access_token
-            authUser.refresh_token = response.data.refresh_token
-            window.localStorage.setItem('authUser', JSON.stringify(authUser))
-            axios.get(userUrl, {headers: getHeader()})
-            .then (response => {
-              console.log('User object: ', response)
-              authUser.email = response.data.email
-              authUser.name = response.data.name
-              window.localStorage.setItem('authUser', JSON.stringify(authUser))
-              this.$store.dispatch('setUserObject', authUser)
-              this.$router.push({name: 'dashboard'})
-            })
-          }
-        }).catch(error => {
-          if (!error.response) {
-              this.showDismissibleAlert = true;
-          }
-        })
-    },
-    onReset (evt) {
-      evt.preventDefault();
-      /* Reset our form values */
-      this.form.email = '';
-      this.form.password = '';
-      /* Trick to reset/clear native browser form validation state */
-      this.show = false;
-      this.$nextTick(() => { this.show = true });
-    }
-  }
-}
-</script>
 <template>
 <b-container>
   <b-row align-h="center" class="mt-5">
@@ -79,14 +12,14 @@ export default {
                          Error with the server encountered, please try again!
                          If error continues please try again later or contact @ chatapp@gmail.com
                    </b-alert>
-                    <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+                    <b-form @submit.prevent="onSubmit" @reset.prevent="onReset" v-if="show" autocomplete="off">
             <b-form-group id="exampleInputGroup1"
                     label="Email address:"
                     label-for="exampleInput1"
                     description="We'll never share your email with anyone else.">
             <b-form-input id="exampleInput1"
                     type="email"
-                    v-model="form.currentEmail"
+                    v-model="form.username"
                     required
                     placeholder="Enter email">
             </b-form-input>
@@ -96,7 +29,7 @@ export default {
                     label-for="exampleInput2">
             <b-form-input id="exampleInput2"
                       type="password"
-                      v-model="form.currentPassword"
+                      v-model="form.password"
                       required
                       placeholder="Enter password">
             </b-form-input>
@@ -123,6 +56,38 @@ export default {
         </b-row>
       </b-container>
 </template>
+
+<script>
+import {mapState} from 'vuex'
+export default {
+  computed: {
+    ...mapState({
+      userStore: state => state.userStore
+    })
+  },
+  data () {
+    return {
+      form: {
+        username: 'nikolagavr@gmail.com',
+        password: 'password',
+        },
+      show: true,
+      showDismissibleAlert: false
+    }
+  },
+  methods: {
+    onSubmit () {
+        const username = this.form.username
+		   	const password = this.form.password
+        this.$store.dispatch('userStore/login', {username, password})
+        .then(() => {
+          this.$router.push('dashboard')
+        })
+    }
+  }
+}
+
+</script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
