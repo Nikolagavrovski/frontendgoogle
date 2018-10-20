@@ -3,15 +3,17 @@ import {getUserToken, getUserObject, userRegister} from './../../config'
 const state = {
   status: '',
   token: localStorage.getItem('token') || '',
+  user: localStorage.getItem('user') || {}
 }
 
 const mutations = {
   AUTH_REQUEST(state){
     state.status = 'loading'
   },
-  AUTH_SUCCESS(state, token){
+  AUTH_SUCCESS(state, user){
     state.status = 'success'
-    state.token = token
+    state.token = user.token
+    state.user = user
   },
   AUTH_ERROR(state){
     state.status = 'error'
@@ -19,9 +21,9 @@ const mutations = {
   LOGOUT(state){
     state.status = ''
     state.token = ''
+    state.user = {}
   }
 }
-
 const actions = {
   /*
 //    Login user function
@@ -38,19 +40,19 @@ const actions = {
             const token = resp.data.access_token
             axios.get(getUserObject, {headers: {'Access': "application/json",'Authorization': 'Bearer ' + token}})
             .then(resp =>{
-              const authUser = {}
-              authUser.name = resp.data.name
-              authUser.email = resp.data.email
-              authUser.token = token
-              window.localStorage.setItem('user', JSON.stringify(authUser))
+              let user = {}
+              user.name = resp.data.name
+              user.email = resp.data.email
+              user.token = token
+              window.localStorage.setItem('user', JSON.stringify(user))
               window.localStorage.setItem('token', token)
-              commit('AUTH_SUCCESS', token)
+              commit('AUTH_SUCCESS', user)
               resolve(resp)
             })
         })
         .catch(err => {
             commit('AUTH_ERROR')
-            localStorage.removeItem('token')
+            window.localStorage.removeItem('token')
             localStorage.removeItem('user')
             reject(err)
         })
@@ -61,10 +63,7 @@ const actions = {
 //
 */
 register({commit}, user){
-  console.log(user)
   return new Promise((resolve, reject) => {
-        console.log(user)
-        
         commit('AUTH_REQUEST')
         axios({url: userRegister, data: user, method: 'POST', headers: {
           'Content-Type': 'multipart/form-data', 
@@ -79,6 +78,7 @@ register({commit}, user){
         .catch(err => {
             commit('AUTH_ERROR', err)
             window.localStorage.removeItem('token')
+            window.localStorage.removeItem('user')
             reject(err)
         })
     })

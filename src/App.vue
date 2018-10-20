@@ -6,12 +6,22 @@ export default {
   components: {
     NavBar
   },
+  method: {
+    logout: function () {
+      this.$store.dispatch('store/logout')
+      .then(() => {
+        this.$router.push('home')
+      })
+    }
+  },
   computed: {
-    
+    ...mapState({
+      
+    })
   },
   created () {
     console.log('App.vue is created')
-
+   
   }
 }
 </script>

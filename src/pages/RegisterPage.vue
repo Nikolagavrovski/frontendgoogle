@@ -29,7 +29,7 @@
                     description="We'll never share your email with anyone else.">
             <b-form-input id="userEmail"
                     type="email"
-                    v-model="form.currentEmail"
+                    v-model="form.email"
                     required
                     placeholder="Enter email">
             </b-form-input>
@@ -39,7 +39,7 @@
                     label-for="exampleInput2">
             <b-form-input id="userPassword"
                       type="password"
-                      v-model="form.currentPassword"
+                      v-model="form.password"
                       required
                       placeholder="Enter password">
             </b-form-input>

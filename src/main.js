@@ -36,16 +36,20 @@ const router = new VueRouter ({
   routes
 })
 
+
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiresAuth) {
-    let authUser = JSON.parse(window.localStorage.getItem('user'))
-    if (authUser && authUser.token) {
+  if(to.meta.requiresAuth) {
+    let userObject = JSON.parse(window.localStorage.getItem('user'))
+    if (userObject) {
       next()
-    } else { next({name: 'home'})
+      return
+    }
+    next('/login') 
+  } else {
+    next() 
   }
-}
-   next()
 })
+
 
 new Vue({
   router, store
