@@ -87,10 +87,9 @@ export default {
             let username = this.form.username
             let email = this.form.email
 		   	    let password = this.form.password
-      
-      this.$store.dispatch('userStore/register', {username, email, password})
+      this.$store.dispatch('user/register', {username, email, password})
         .then(() => {
-          this.$router.push('dashboard')
+          this.$router.push('home')
         })
     }
   }

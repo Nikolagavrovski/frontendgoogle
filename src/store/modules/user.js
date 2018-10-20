@@ -3,20 +3,15 @@ import {getUserToken, getUserObject, userRegister} from './../../config'
 const state = {
   status: '',
   token: localStorage.getItem('token') || '',
-  user: ''
 }
 
 const mutations = {
   AUTH_REQUEST(state){
     state.status = 'loading'
   },
-  AUTH_SUCCESS(state, token, user){
-    console.log(user)
-    console.log(state)
-    console.log(token)
+  AUTH_SUCCESS(state, token){
     state.status = 'success'
     state.token = token
-    state.user = user
   },
   AUTH_ERROR(state){
     state.status = 'error'
@@ -28,6 +23,10 @@ const mutations = {
 }
 
 const actions = {
+  /*
+//    Login user function
+//
+*/
   login({commit}, user){
     return new Promise((resolve, reject) => {
         commit('AUTH_REQUEST')
@@ -36,40 +35,43 @@ const actions = {
           data: user, 
           method: 'POST'
         }).then(resp => {
-          console.log(resp)
-            //const user = {}
             const token = resp.data.access_token
-            //user.access_token = resp.data.access_token
             axios.get(getUserObject, {headers: {'Access': "application/json",'Authorization': 'Bearer ' + token}})
             .then(resp =>{
-              const userObject = "12cwckporakpowxr12"
-              //user.name = resp.data.name
-              //user.email = resp.data.email
+              const authUser = {}
+              authUser.name = resp.data.name
+              authUser.email = resp.data.email
+              authUser.token = token
+              window.localStorage.setItem('user', JSON.stringify(authUser))
               window.localStorage.setItem('token', token)
-              window.localStorage.setItem('user', userObject)
-              //localStorage.setItem('user', JSON.stringify(user))
-              console.log(userObject)
-              commit('AUTH_SUCCESS', token, userObject)
+              commit('AUTH_SUCCESS', token)
               resolve(resp)
             })
         })
         .catch(err => {
             commit('AUTH_ERROR')
             localStorage.removeItem('token')
+            localStorage.removeItem('user')
             reject(err)
         })
     })
 },
+/*
+//    Register new user function
+//
+*/
 register({commit}, user){
+  console.log(user)
   return new Promise((resolve, reject) => {
+        console.log(user)
+        
         commit('AUTH_REQUEST')
-        axios({url: userRegister, data: user, method: 'POST', headers: {'Accept': 'application/json'}})
+        axios({url: userRegister, data: user, method: 'POST', headers: {
+          'Content-Type': 'multipart/form-data', 
+          'Accept': 'application/json' }})
         .then(resp => {
-            console.log(resp);
-            const token = resp.data.token
-            const user = resp.data.user
-           // window.localStorage.setItem('token', token)
-            // Add the following line:
+            let token = resp.data.token
+            let user = resp.data.user
             axios.defaults.headers.common['Authorization'] = token
             commit('AUTH_SUCCESS', token, user)
             resolve(resp)
@@ -81,6 +83,10 @@ register({commit}, user){
         })
     })
 },
+/*
+//    Logout user
+//
+*/
   logout({commit}){
     return new Promise((resolve, reject) => {
         commit('LOGOUT')

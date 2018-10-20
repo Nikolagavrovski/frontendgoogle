@@ -13,21 +13,21 @@
                          If error continues please try again later or contact @ chatapp@gmail.com
                    </b-alert>
                     <b-form @submit.prevent="onSubmit" @reset.prevent="onReset" v-if="show" autocomplete="off">
-            <b-form-group id="exampleInputGroup1"
+            <b-form-group
                     label="Email address:"
-                    label-for="exampleInput1"
+                    
                     description="We'll never share your email with anyone else.">
-            <b-form-input id="exampleInput1"
+            <b-form-input
                     type="email"
                     v-model="form.username"
                     required
                     placeholder="Enter email">
             </b-form-input>
             </b-form-group>
-            <b-form-group id="exampleInputGroup2"
+            <b-form-group
                     label="Password:"
-                    label-for="exampleInput2">
-            <b-form-input id="exampleInput2"
+                    
+            <b-form-input
                       type="password"
                       v-model="form.password"
                       required
@@ -76,7 +76,7 @@ export default {
     onSubmit () {
         const username = this.form.username
 		   	const password = this.form.password
-        this.$store.dispatch('userStore/login', {username, password})
+        this.$store.dispatch('user/login', {username, password})
         .then(() => {
           this.$router.push('dashboard')
         })

@@ -1,19 +1,17 @@
 
 <script>
-
+import {mapGetters, mapState} from 'vuex'
 import NavBar from './components/NavBar'
 export default {
   components: {
     NavBar
   },
   computed: {
-
-
+    
   },
   created () {
-    //console.log('App.vue is created')
-    //const userObj = JSON.parse(window.localStorage.getItem('authUser'))
-    //this.$store.dispatch('setUserObject', userObj)
+    console.log('App.vue is created')
+
   }
 }
 </script>
@@ -23,7 +21,8 @@ export default {
 </style>
 
 <template>
-  <div>
+  <div class="container">
+    <pre></pre>
     <NavBar/>
     <router-view></router-view>
 
