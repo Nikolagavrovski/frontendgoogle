@@ -65,17 +65,21 @@ const actions = {
 register({commit}, user){
   return new Promise((resolve, reject) => {
         commit('AUTH_REQUEST')
-        axios({url: userRegister, data: user, method: 'POST', headers: {
-          'Content-Type': 'multipart/form-data', 
-          'Accept': 'application/json' }})
+        console.log(user)
+        axios({url: userRegister, data: user, method: 'POST'})
         .then(resp => {
+          console.log(resp)
             let token = resp.data.token
-            let user = resp.data.user
+            let user = {}
+              user.name = resp.data.name
+              user.email = resp.data.email
+              user.token = token
             axios.defaults.headers.common['Authorization'] = token
-            commit('AUTH_SUCCESS', token, user)
+            commit('AUTH_SUCCESS', user)
             resolve(resp)
         })
         .catch(err => {
+          console.log(err)
             commit('AUTH_ERROR', err)
             window.localStorage.removeItem('token')
             window.localStorage.removeItem('user')
