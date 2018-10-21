@@ -12,7 +12,7 @@ export default {
   },
   computed: {
     ...mapState({
-      //userAuth: state => state.user
+     
     }),
     ...mapGetters({
      userAuth:'user/isLoggedIn'

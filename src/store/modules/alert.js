@@ -30,6 +30,11 @@ const mutations = {
     }
 };
 
+const getters = {
+    errorType: state => state.type,
+    errorMessage: state => state.message
+}
+
 export const alert = {
     namespaced: true,
     state,

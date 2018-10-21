@@ -12,6 +12,7 @@ export default new Vuex.Store({
   modules: {
     user,
     chat,
+    alert
   },
   strict: debug
 })

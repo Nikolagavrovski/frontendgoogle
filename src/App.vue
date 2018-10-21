@@ -17,6 +17,11 @@ export default {
   computed: {
     ...mapState({
       
+    }),
+     ...mapGetters({
+     userAuth:'user/isLoggedIn',
+     authStatus:'user/authStatus'
+     
     })
   },
   created () {
@@ -32,9 +37,8 @@ export default {
 
 <template>
   <div class="container">
-    <pre></pre>
+    <pre>{{ userAuth}}</pre>
     <NavBar/>
     <router-view></router-view>
-
   </div>
 </template>

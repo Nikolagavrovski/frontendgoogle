@@ -5,17 +5,9 @@
     <b-col cols="5">
       <b-card class="text-center">
         <h3 class="mb-4">Login</h3>
-                    <b-alert variant="danger"
-                        dismissible
-                        :show="showDismissibleAlert"
-                        @dismissed="showDismissibleAlert=false">
-                         Error with the server encountered, please try again!
-                         If error continues please try again later or contact @ chatapp@gmail.com
-                   </b-alert>
                     <b-form @submit.prevent="onSubmit" @reset.prevent="onReset" v-if="show" autocomplete="off">
             <b-form-group
                     label="Email address:"
-                    
                     description="We'll never share your email with anyone else.">
             <b-form-input
                     type="email"
@@ -26,8 +18,8 @@
             </b-form-group>
             <b-form-group
                     label="Password:"
-                    
-            <b-form-input
+                    >
+             <b-form-input
                       type="password"
                       v-model="form.password"
                       required
@@ -74,8 +66,8 @@ export default {
   },
   methods: {
     onSubmit () {
-        const username = this.form.username
-		   	const password = this.form.password
+        let username = this.form.username
+		   	let password = this.form.password
         this.$store.dispatch('user/login', {username, password})
         .then(() => {
           this.$router.push('dashboard')
@@ -87,6 +79,6 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style scoped>  
 
 </style>
