@@ -18,7 +18,7 @@
                     label-for="exampleInput1">
             <b-form-input id="userName"
                     type="text"
-                    v-model="form.username"
+                    v-model="form.name"
                     required
                     placeholder="Enter your name">
             </b-form-input>
@@ -87,7 +87,7 @@ export default {
             let name = this.form.name
             let email = this.form.email
 		   	    let password = this.form.password
-      this.$store.dispatch('user/register', {username, email, password})
+      this.$store.dispatch('user/register', {name, email, password})
         .then(() => {
           this.$router.push('home')
         })

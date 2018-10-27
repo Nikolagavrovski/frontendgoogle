@@ -105,6 +105,7 @@ register({commit}, user){
 const getters = {
   isLoggedIn: state => !!state.token,
   authStatus: state => state.status,
+  userObject: state => state.user
 }
 
 export default {

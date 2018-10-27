@@ -36,8 +36,7 @@ export default {
 </style>
 
 <template>
-  <div class="container">
-    <pre>{{ userAuth}}</pre>
+  <div>
     <NavBar/>
     <router-view></router-view>
   </div>

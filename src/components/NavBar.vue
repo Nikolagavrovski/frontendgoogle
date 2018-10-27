@@ -11,9 +11,6 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-     
-    }),
     ...mapGetters({
      userAuth:'user/isLoggedIn'
     })
@@ -22,6 +19,7 @@ export default {
 </script>
 
 <template>
+<div class="container">
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary" v-if="userAuth">
   <a class="navbar-brand" href="#">Chatex</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
@@ -46,8 +44,7 @@ export default {
       </div>
     </div>
   </div>
-
-    
   </div>
 </nav>
+</div>
 </template>
