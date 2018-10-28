@@ -10,6 +10,7 @@
 
     import MessageFeed from './MessageFeed' 
     import MessageComposer from './MessageComposer'
+    import {conversationMessageSend} from './../config'
 
 export default {
     components: {MessageFeed, MessageComposer},
@@ -25,7 +26,14 @@ export default {
     },
     methods: {
         sendMessage (text){
-            console.log(text)
+            if (!this.contact) {
+                return
+            }
+            let userObject = JSON.parse(localStorage.getItem('user'))
+            axios({url: conversationMessageSend, data: {from: userObject.id, contact_id: this.contact.id, message: text}, method: 'POST'})
+            .then(response => {
+                this.$emit('new', response.data)
+            })
         }
     }
 }

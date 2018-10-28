@@ -41,6 +41,7 @@ const actions = {
             axios.get(getUserObject, {headers: {'Access': "application/json",'Authorization': 'Bearer ' + token}})
             .then(resp =>{
               let user = {}
+              user.id = resp.data.id
               user.name = resp.data.name
               user.email = resp.data.email
               user.token = token

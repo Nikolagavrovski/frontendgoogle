@@ -5,7 +5,7 @@
             <div class="card">
                 <div class="card-header">Messanger</div>
                 <div class="card-body">
-                    <Conversation :contact="selectedContact" :messages="messages"/>
+                    <Conversation :contact="selectedContact" :messages="messages" @new="saveNewMessage"/>
                     <ContactList :contacts="contacts" @selected="startConversationWith"/>
                 </div>
             </div>
@@ -30,7 +30,7 @@ export default {
         }
     },
     mounted() {
-        axios({url: getContacts, method: 'GET'})
+         axios({url: getContacts, method: 'GET'})
         .then(resp => {    
                 if (resp.status == 200)
                     {
@@ -41,13 +41,22 @@ export default {
     methods: {
         startConversationWith(contact) {
             let userId = contact.id
-            console.log('Function startWithConverstionWith works')
             axios({ url: getConversationById + userId, method: 'GET'})
             .then(response => {
-                console.log(response.data)
                 this.messages = response.data
                 this.selectedContact = contact
             })
+        },
+        saveNewMessage (text) {
+            this.messages.push(text)
+        },
+        handleIncoming(message) {
+            if(this.selectedContact && message.from == this.selectedContact.id) {
+                saveNewMessage(message)
+                return
+            }
+
+            alert(message.text)
         }
     },
     computed: {
