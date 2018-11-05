@@ -25,7 +25,6 @@ export default {
     })
   },
   created () {
-    console.log('App.vue is created')
    
   }
 }

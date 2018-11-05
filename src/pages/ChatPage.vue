@@ -18,31 +18,55 @@
     import Conversation from './Conversation'
     import ContactList from './ContactList'
     import {getContacts, getConversationById} from './../config'
-    import {mapGetters} from 'vuex'
+    import {mapGetters} from 'vuex' 
+    import Pusher from 'pusher-js'
 
 export default {
     components: {Conversation, ContactList},
+
     data() {
         return {
             selectedContact: null,
             messages: [],
-            contacts: []
+            contacts: [],
+            pusher: null,
+            channel: null
         }
     },
     mounted() {
-         axios({url: getContacts, method: 'GET'})
+        let userObject = JSON.parse(localStorage.getItem('user'))
+        axios({url: getContacts + userObject.id, data: {user_id: userObject.id}, method: 'GET'})
         .then(resp => {    
                 if (resp.status == 200)
                     {
                         this.contacts = resp.data
                     }
-                })        
+                })
+        .catch(error => {
+            console.log(error)
+        })
+
+        // Pusher live chat helper
+        this.pusher = new Pusher('9ef050ce5246b8c7880d', {
+            cluster: 'eu',
+            })
+        const vm = this
+        const channelName = 'messages-' + userObject.id
+        this.channel = this.pusher.subscribe(channelName)
+        this.channel.bind('new-message', function(data) {
+            vm.$emit('incomingmessage', (data))
+        })
+        this.$on('incomingmessage', function (chatMessage) {
+           this.handleIncomingMessage(chatMessage)
+        })
+
     },
     methods: {
         startConversationWith(contact) {
             let userId = contact.id
             axios({ url: getConversationById + userId, method: 'GET'})
             .then(response => {
+                           console.log(response.data[5])
                 this.messages = response.data
                 this.selectedContact = contact
             })
@@ -50,20 +74,16 @@ export default {
         saveNewMessage (text) {
             this.messages.push(text)
         },
-        handleIncoming(message) {
-            if(this.selectedContact && message.from == this.selectedContact.id) {
-                saveNewMessage(message)
+        handleIncomingMessage(e) {    
+            let content = e.message
+            if(this.selectedContact && this.selectedContact.id == content.from){
+                this.saveNewMessage(content)
                 return
             }
-
-            alert(message.text)
+            alert(content.text)
         }
-    },
-    computed: {
-        ...mapGetters({
-            userObj: 'user/userObject'
-        })
     }
+      
 }
 </script>
 
@@ -75,3 +95,17 @@ export default {
 }
 
 </style>
+
+
+<!--handleIncoming(data) {
+            console.log(data)
+            if(this.selectedContact && data.message.from == this.selectedContact.id) {
+                console.log('success',data)
+                saveNewMessage(data)
+                return
+            }
+            alert(data.text)
+            
+        } 
+        */
+        -->
