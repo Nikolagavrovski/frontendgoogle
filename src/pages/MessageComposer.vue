@@ -1,13 +1,6 @@
 <template>
     <div class="composer">
-        <textarea class="textarea" v-model="message" @keydown.enter="send" placeholder="Message..."></textarea>
-        <select v-model="option">
-            <option disabled value="">Please select one</option>
-            <option>A</option>
-            <option>B</option>
-            <option>C</option>
-        </select>
-        <span>Selected language: {{ option }}</span>   
+        <textarea class="textarea" v-model="message" @keydown.enter="send" placeholder="Message..."></textarea> 
     </div>
 </template>
 

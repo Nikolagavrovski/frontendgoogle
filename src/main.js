@@ -15,7 +15,11 @@ import RegisterPage from './pages/RegisterPage'
 import DashboardPage from './pages/DashboardPage'
 import ChatPage from './pages/ChatPage'
 import store from './store/store'
+import _ from 'lodash'
 
+// Infinitve scroll
+import InfiniteLoading from 'vue-infinite-loading';
+Vue.use(InfiniteLoading, { /* options */ });
 
 Vue.use(BootstrapVue)
 Vue.use(VueRouter)
@@ -24,6 +28,9 @@ Vue.config.productionTip = false
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 Vue.component('app', App)
+
+
+
 
 
 const routes = [
@@ -52,6 +59,7 @@ router.beforeEach((to, from, next) => {
     next() 
   }
 })
+
 new Vue({
   router, store
 }).$mount('#app')

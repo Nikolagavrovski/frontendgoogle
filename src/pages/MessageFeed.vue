@@ -1,16 +1,19 @@
 <template>
     <div class="feed" ref="feed">
         <ul v-if="contact">
+            <infinite-loading direction="top" @infinite="infiniteHandler"></infinite-loading>
             <li v-for="message in messages" v-bind:class="messageStatus(message.to, contact.id)" :key="message.id">
                 <div class="text">
                     {{ message.text}}
                 </div>
             </li>
+            
         </ul>
     </div>
 </template>
 
 <script>
+import {getConversationById} from './../config'
 
 export default {
     props: {
@@ -25,7 +28,9 @@ export default {
     data () {
         return {
             messageSent: 'message sent',
-            messageReceived: 'message received'
+            messageReceived: 'message received',
+            list: [],
+            page: 1,
         }
     },
     methods: {
@@ -40,7 +45,10 @@ export default {
             setTimeout(() => {
                 this.$refs.feed.scrollTop = this.$refs.feed.scrollHeight - this.$refs.feed.clientHeight
             }, 50)
-        }
+        },
+        infiniteHandler($state) {
+            console.log('state works')
+     },
     },
     watch: {
         contact(contact) {
@@ -58,7 +66,7 @@ export default {
         background: #f0f0f0;
         height: 100%;
         max-height: 470px;
-        overflow: scroll;
+        overflow-y: scroll;
         
         ul {
             list-style: none;

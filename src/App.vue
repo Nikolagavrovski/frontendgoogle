@@ -15,17 +15,10 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      
-    }),
      ...mapGetters({
      userAuth:'user/isLoggedIn',
-     authStatus:'user/authStatus'
-     
+     authStatus:'user/authStatus',
     })
-  },
-  created () {
-   
   }
 }
 </script>

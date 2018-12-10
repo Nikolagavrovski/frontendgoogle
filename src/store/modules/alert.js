@@ -1,7 +1,7 @@
 const state = {
     type: null,
     message: null
-};
+}
 
 const actions = {
     success({ commit }, message) {
@@ -13,7 +13,7 @@ const actions = {
     clear({ commit }, message) {
         commit('success', message);
     }
-};
+}
 
 const mutations = {
     success(state, message) {
@@ -28,16 +28,17 @@ const mutations = {
         state.type = null;
         state.message = null;
     }
-};
+}
 
 const getters = {
     errorType: state => state.type,
     errorMessage: state => state.message
 }
 
-export const alert = {
+export default {
     namespaced: true,
     state,
+    mutations,
     actions,
-    mutations
-};
+    getters
+  }

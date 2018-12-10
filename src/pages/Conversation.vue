@@ -1,6 +1,6 @@
 <template>
     <div class="conversation">
-        <h1> {{ contact ? contact.name : 'Select a contact' }}</h1>
+        <h1> {{ contact ? contact.name : 'Select a contact to chat with' }}</h1>
         <MessageFeed :contact="contact" :messages="messages"/>
         <MessageComposer @send="sendMessage" />
     </div>

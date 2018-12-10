@@ -6,6 +6,8 @@ export const userRegister = apiDomain + 'api/register'
 export const getContacts = apiDomain + 'api/contacts/'
 export const getConversationById = apiDomain + 'api/conversation/'
 export const conversationMessageSend = apiDomain + 'api/conversation/send'
+export const getLanguages = apiDomain + 'api/get-languages'
+export const updateUser = apiDomain + 'api/settings/update/'
 
 export const getHeader = function () {
   const tokenData = JSON.parse(window.localStorage.getItem('token'))

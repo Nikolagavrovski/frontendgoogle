@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 
 
 import user from './modules/user'
-import chat from './modules/chat'
+import alert from './modules/alert'
 
 Vue.use(Vuex);
 const debug = process.env.NODE_ENV !== 'production'

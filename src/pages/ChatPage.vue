@@ -56,56 +56,60 @@ export default {
         this.channel.bind('new-message', function(data) {
             vm.$emit('incomingmessage', (data))
         })
-        this.$on('incomingmessage', function (chatMessage) {
-           this.handleIncomingMessage(chatMessage)
+        this.$on('incomingmessage', function (data) {
+           this.handleIncomingMessage(data)
         })
-
     },
     methods: {
         startConversationWith(contact) {
+            this.updateUnreadCount(contact, true)
             let userId = contact.id
-            axios({ url: getConversationById + userId, method: 'GET'})
+            let userObject = JSON.parse(localStorage.getItem('user'))
+            let currentUser =  userObject.id
+            axios({ url: getConversationById + userId + '/' + currentUser, method: 'GET'})
             .then(response => {
-                           console.log(response.data[5])
                 this.messages = response.data
                 this.selectedContact = contact
             })
         },
-        saveNewMessage (text) {
-            this.messages.push(text)
+        saveNewMessage (message) {
+            this.messages.push(message)
         },
-        handleIncomingMessage(e) {    
-            let content = e.message
+        handleIncomingMessage(data) {
+                
+            
+            let content = data.message
             if(this.selectedContact && this.selectedContact.id == content.from){
                 this.saveNewMessage(content)
                 return
             }
-            alert(content.text)
-        }
-    }
-      
+            let userObjct = data.message.fromUserObject
+            this.updateUnreadCount(userObjct, false)
+
+
+        },
+        updateUnreadCount(contact, reset) {
+            this.contacts = this.contacts.map((single) => {
+                if (single.id != contact.id)
+                {
+                    return single;
+                }
+                if (reset)
+                    single.unread = 0;
+                else 
+                    single.unread += 1;
+
+                return single;
+                }
+            )}
+        }   
 }
+
 </script>
 
 <style lang="scss" scoped>
-
 .card-body {
     display: flex;
     padding: 0;
 }
-
 </style>
-
-
-<!--handleIncoming(data) {
-            console.log(data)
-            if(this.selectedContact && data.message.from == this.selectedContact.id) {
-                console.log('success',data)
-                saveNewMessage(data)
-                return
-            }
-            alert(data.text)
-            
-        } 
-        */
-        -->

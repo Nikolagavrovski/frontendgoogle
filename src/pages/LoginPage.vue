@@ -4,8 +4,9 @@
   <b-row align-h="center" class="mt-5">
     <b-col cols="5">
       <b-card class="text-center">
+        <div v-if="errorMessage" :class="`alert ${errorType}`">{{errorMessage}}</div>
         <h3 class="mb-4">Login</h3>
-                    <b-form @submit.prevent="onSubmit" @reset.prevent="onReset" v-if="show" autocomplete="off">
+                    <b-form @submit.prevent="onSubmit" v-if="show" autocomplete="off">
             <b-form-group
                     label="Email address:"
                     description="We'll never share your email with anyone else.">
@@ -27,9 +28,7 @@
             </b-form-input>
               <div class="d-flex flex-row bd-highlight mb-3">
             <div class="p-2 bd-highlight">
-              <b-form-checkbox-group v-model="form.checked" id="exampleChecks">
-              <b-form-checkbox value="rememberMe">Remember me</b-form-checkbox>
-             </b-form-checkbox-group>
+
                </div>
                   </div>
                     </b-form-group>
@@ -50,16 +49,23 @@
 </template>
 
 <script>
-import {mapState, mapActions} from 'vuex'
+import {mapState, mapActions, mapGetters} from 'vuex'
 export default {
+  mounted() {
+    this.$store.dispatch('alert/clear')
+  },
   computed: {
+    ...mapGetters({
+     errorType: 'alert/errorType',
+     errorMessage: 'alert/errorMessage',
+    }),
   },
   data () {
     return {
       form: {
         username: 'nikolagavr@gmail.com',
         password: 'password',
-        },
+        },    
       show: true,
       showDismissibleAlert: false
     }
@@ -70,7 +76,7 @@ export default {
 		   	let password = this.form.password
         this.$store.dispatch('user/login', {username, password})
         .then(() => {
-          this.$router.push('dashboard')
+          this.$router.push('chat')
         })
     }
   }

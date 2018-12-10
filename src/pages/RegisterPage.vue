@@ -4,18 +4,12 @@
   <b-row align-h="center" class="mt-5">
     <b-col cols="5">
       <b-card class="text-center">
+        <div v-if="errorMessage" :class="`alert ${errorType}`">{{errorMessage}}</div>
         <h3 class="mb-4">Register new user</h3>
-                    <b-alert variant="danger"
-                        dismissible
-                        :show="showDismissibleAlert"
-                        @dismissed="showDismissibleAlert=false">
-                         Error with the server encountered, please try again!
-                         If error continues please try again later or contact @ chatapp@gmail.com
-                   </b-alert>
                     <b-form @submit.prevent="onSubmit" v-if="show" autocomplete="off">
             <b-form-group id="userName"
-                    label="Your full name:"
-                    label-for="exampleInput1">
+               label="Enter your name or username:"
+                    >
             <b-form-input id="userName"
                     type="text"
                     v-model="form.name"
@@ -24,9 +18,8 @@
             </b-form-input>
             </b-form-group>            
             <b-form-group id="userEmail"
-                    label="Email address:"
-                    label-for="exampleInput1"
-                    description="We'll never share your email with anyone else.">
+            label="Enter your e-mail address"
+                >
             <b-form-input id="userEmail"
                     type="email"
                     v-model="form.email"
@@ -34,19 +27,26 @@
                     placeholder="Enter email">
             </b-form-input>
             </b-form-group>
-            <b-form-group id="userPassword"
-                    label="Password:"
-                    label-for="exampleInput2">
-            <b-form-input id="userPassword"
+            <b-form-group
+            label="Enter your password"
+            >
+            <b-form-input 
                       type="password"
                       v-model="form.password"
                       required
                       placeholder="Enter password">
-            </b-form-input>
+            </b-form-input>&nbsp;
+            <b-form-group
+                    label="Select translate language"
+                    description="Select language in which you'll receive messages. Translation uses google translate engine">
+                     <b-form-select
+                      :options="languages"
+                      required
+                      v-model="form.lange">
+            </b-form-select>
+            </b-form-group>
               <div class="d-flex flex-row bd-highlight mb-3">
             <div class="p-2 bd-highlight">
-              <b-form-checkbox-group v-model="form.checked" id="exampleChecks">
-             </b-form-checkbox-group>
                </div>
                   </div>
                     </b-form-group>
@@ -66,32 +66,50 @@
 </template>
 
 <script>
-import {loginUrl, getHeader, userUrl} from './../config'
+import {loginUrl, getHeader, userUrl, getLanguages} from './../config'
 import {clientId, clientSecret} from './../env'
-import {mapState} from 'vuex'
+import {mapState, mapGetters} from 'vuex'
 
 export default {
+   mounted() {
+    this.$store.dispatch('alert/clear')
+  },
+  computed: {
+    ...mapGetters({
+     errorType: 'alert/errorType',
+     errorMessage: 'alert/errorMessage',
+    })
+  },
   data () {
     return {
       form: {
         name: '',
         email: '',
         password: '',
+        lange: '',
         },
+      languages: {},
+      selectedOption: '',
       show: true,
-      showDismissibleAlert: false
     }
+  },
+  mounted() {
+    axios({url: getLanguages, method: 'GET'})
+        .then(response => {
+            this.languages = response.data
+        })
   },
   methods: {
     onSubmit () {
             let name = this.form.name
             let email = this.form.email
-		   	    let password = this.form.password
-      this.$store.dispatch('user/register', {name, email, password})
+            let password = this.form.password
+            let language = this.form.lange
+      this.$store.dispatch('user/register', {name, email, password, language})
         .then(() => {
           this.$router.push('home')
         })
-    }
+    },
   }
 }
 
