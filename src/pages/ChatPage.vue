@@ -5,7 +5,7 @@
             <div class="card">
                 <div class="card-header">Messanger</div>
                 <div class="card-body">
-                    <Conversation :contact="selectedContact" :messages="messages" @new="saveNewMessage"/>
+                    <Conversation :contact="selectedContact" :messages="messages" @new="saveNewMessage" v-on:getnewmessages="newmessagegeett"/>
                     <ContactList :contacts="contacts" @selected="startConversationWith"/>
                 </div>
             </div>
@@ -66,8 +66,9 @@ export default {
             let userId = contact.id
             let userObject = JSON.parse(localStorage.getItem('user'))
             let currentUser =  userObject.id
-            axios({ url: getConversationById + userId + '/' + currentUser, method: 'GET'})
+            axios({ url: getConversationById + userId + '/' + currentUser + '?page=' + 1, method: 'GET'})
             .then(response => {
+                console.log('ChatPage', response.data)
                 this.messages = response.data
                 this.selectedContact = contact
             })
@@ -101,7 +102,11 @@ export default {
 
                 return single;
                 }
-            )}
+            )},
+            newmessagegeett(msgObject)
+            {   
+              this.messages.unshift(...msgObject)
+            }
         }   
 }
 

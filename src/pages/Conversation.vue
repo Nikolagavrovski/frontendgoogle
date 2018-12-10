@@ -1,7 +1,7 @@
 <template>
     <div class="conversation">
         <h1> {{ contact ? contact.name : 'Select a contact to chat with' }}</h1>
-        <MessageFeed :contact="contact" :messages="messages"/>
+        <MessageFeed :contact="contact" :messages="messages" v-on:newmessages="forwardnewmessage"/>
         <MessageComposer @send="sendMessage" />
     </div>
 </template>
@@ -34,6 +34,10 @@ export default {
             .then(response => {
                 this.$emit('new', response.data)
             })
+        },
+        forwardnewmessage(data)
+        {   
+            this.$emit('getnewmessages', data)
         }
     }
 }

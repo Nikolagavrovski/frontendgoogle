@@ -28,10 +28,7 @@ Vue.config.productionTip = false
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 Vue.component('app', App)
-
-
-
-
+var $ = require("jquery");
 
 const routes = [
   {path: '/', component: LoginPage, name: 'home'},
@@ -45,7 +42,6 @@ const router = new VueRouter ({
   mode: 'history',
   routes
 })
-
 
 router.beforeEach((to, from, next) => {
   if(to.meta.requiresAuth) {

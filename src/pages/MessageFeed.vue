@@ -1,7 +1,11 @@
 <template>
     <div class="feed" ref="feed">
         <ul v-if="contact">
-            <infinite-loading direction="top" @infinite="infiniteHandler"></infinite-loading>
+            <infinite-loading spinner="bubbles" direction="top" @infinite="infiniteHandler" @distance="4205">
+                <div slot="spinner">Loading...</div>
+                <div slot="no-more">No more message</div>
+                <div slot="no-results">No results message</div>
+            </infinite-loading>
             <li v-for="message in messages" v-bind:class="messageStatus(message.to, contact.id)" :key="message.id">
                 <div class="text">
                     {{ message.text}}
@@ -29,8 +33,7 @@ export default {
         return {
             messageSent: 'message sent',
             messageReceived: 'message received',
-            list: [],
-            page: 1,
+            page: 2,
         }
     },
     methods: {
@@ -47,8 +50,20 @@ export default {
             }, 50)
         },
         infiniteHandler($state) {
-            console.log('state works')
-     },
+            let userObject = JSON.parse(localStorage.getItem('user'))
+            let currentUser =  userObject.id
+            axios({ url: getConversationById + this.contact.id + '/' + currentUser + '?page=' + this.page , method: 'GET'})
+            .then(response => {
+                if (response.data.length != 0)
+                {
+                this.$emit('newmessages', response.data)
+                this.page += 1
+                $state.loaded()
+                } else {
+                         $state.complete()
+                       }
+            })
+       },
     },
     watch: {
         contact(contact) {
