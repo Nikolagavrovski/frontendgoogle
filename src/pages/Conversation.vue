@@ -27,7 +27,7 @@ export default {
     methods: {
         sendMessage (text){
             if (!this.contact) {
-                return
+                alert('Ne postoji contact')
             }
             let userObject = JSON.parse(localStorage.getItem('user'))
             axios({url: conversationMessageSend, data: {from: userObject.id, contact_id: this.contact.id, message: text}, method: 'POST'})
@@ -38,7 +38,7 @@ export default {
         forwardnewmessage(data)
         {   
             this.$emit('getnewmessages', data)
-        }
+        },
     }
 }
 </script>

@@ -23,14 +23,13 @@
 
 export default {
     components: {Conversation, ContactList},
-
     data() {
         return {
             selectedContact: null,
             messages: [],
             contacts: [],
             pusher: null,
-            channel: null
+            channel: null,
         }
     },
     mounted() {
@@ -63,13 +62,13 @@ export default {
     methods: {
         startConversationWith(contact) {
             this.updateUnreadCount(contact, true)
+            this.$store.dispatch('messages/clearPage')
             let userId = contact.id
             let userObject = JSON.parse(localStorage.getItem('user'))
             let currentUser =  userObject.id
             axios({ url: getConversationById + userId + '/' + currentUser + '?page=' + 1, method: 'GET'})
             .then(response => {
-                console.log('ChatPage', response.data)
-                this.messages = response.data
+                this.messages = response.data.data.reverse()
                 this.selectedContact = contact
             })
         },
@@ -77,8 +76,6 @@ export default {
             this.messages.push(message)
         },
         handleIncomingMessage(data) {
-                
-            
             let content = data.message
             if(this.selectedContact && this.selectedContact.id == content.from){
                 this.saveNewMessage(content)
@@ -86,7 +83,7 @@ export default {
             }
             let userObjct = data.message.fromUserObject
             this.updateUnreadCount(userObjct, false)
-
+            this.saveNewMessage
 
         },
         updateUnreadCount(contact, reset) {
@@ -103,11 +100,12 @@ export default {
                 return single;
                 }
             )},
-            newmessagegeett(msgObject)
-            {   
-              this.messages.unshift(...msgObject)
-            }
-        }   
+        newmessagegeett(msgObject)
+        {   
+            this.messages.unshift(...msgObject.reverse())
+            
+        },
+    }   
 }
 
 </script>

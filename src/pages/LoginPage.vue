@@ -12,6 +12,7 @@
                     description="We'll never share your email with anyone else.">
             <b-form-input
                     type="email"
+                    autocomplete="email e-mail"
                     v-model="form.username"
                     required
                     placeholder="Enter email">
@@ -22,6 +23,7 @@
                     >
              <b-form-input
                       type="password"
+                      autocomplete="password current-password"
                       v-model="form.password"
                       required
                       placeholder="Enter password">
