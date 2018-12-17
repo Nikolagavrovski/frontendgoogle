@@ -1,5 +1,4 @@
 import {getUserToken, getUserObject, userRegister, updateUser} from './../../config'
-
 const state = {
   status: '',
   token: localStorage.getItem('token') || '',

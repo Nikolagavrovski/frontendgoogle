@@ -40,7 +40,6 @@
                               <b-button type="register" variant="danger" :to="{name: 'register'}">Register</b-button>
                          </div>
                        <div>
-                     <a href="#">Forgot password?</a>
                    </div>
                  </div>
                </b-form>
@@ -69,16 +68,23 @@ export default {
         password: 'password',
         },    
       show: true,
-      showDismissibleAlert: false
+      showDismissibleAlert: false,
+      loaderFalse: false,
+      loaderTrue: true,
     }
   },
   methods: {
     onSubmit () {
+        this.$store.dispatch('loader/setLoadingState', this.loaderTrue)
         let username = this.form.username
 		   	let password = this.form.password
         this.$store.dispatch('user/login', {username, password})
         .then(() => {
-          this.$router.push('chat')
+         this.$store.dispatch('loader/setLoadingState', this.loaderFalse)
+         this.$router.push({path: 'chat'})
+        })
+        .catch(err => {
+          this.$store.dispatch('loader/setLoadingState', this.loaderFalse)
         })
     }
   }

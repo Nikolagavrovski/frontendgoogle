@@ -30,19 +30,23 @@ export default {
             contacts: [],
             pusher: null,
             channel: null,
+            loaderTrue: true,
+            loaderFalse: false
         }
     },
     mounted() {
+        this.$store.dispatch('loader/setLoadingState', this.loaderTrue)
         let userObject = JSON.parse(localStorage.getItem('user'))
         axios({url: getContacts + userObject.id, data: {user_id: userObject.id}, method: 'GET'})
         .then(resp => {    
                 if (resp.status == 200)
                     {
                         this.contacts = resp.data
+                        this.$store.dispatch('loader/setLoadingState', this.loaderFalse)
                     }
                 })
         .catch(error => {
-            console.log(error)
+            alert('Unable to load users, please refresh the page and if error continues please contact administrator!')
         })
 
         // Pusher live chat helper
@@ -57,19 +61,23 @@ export default {
         })
         this.$on('incomingmessage', function (data) {
            this.handleIncomingMessage(data)
-        })
+        });
     },
     methods: {
         startConversationWith(contact) {
+                this.messages = []
+                this.selectedContact = contact
             this.updateUnreadCount(contact, true)
             this.$store.dispatch('messages/clearPage')
-            let userId = contact.id
-            let userObject = JSON.parse(localStorage.getItem('user'))
-            let currentUser =  userObject.id
+            this.$store.dispatch('loader/setLoadingState', this.loaderTrue)
+            this.$store.dispatch('loader/setInfinityState')
+                let userId = contact.id
+                let userObject = JSON.parse(localStorage.getItem('user'))
+                let currentUser =  userObject.id
             axios({ url: getConversationById + userId + '/' + currentUser + '?page=' + 1, method: 'GET'})
             .then(response => {
                 this.messages = response.data.data.reverse()
-                this.selectedContact = contact
+                this.$store.dispatch('loader/setLoadingState', this.loaderFalse)
             })
         },
         saveNewMessage (message) {

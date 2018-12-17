@@ -10,7 +10,7 @@
             <b-form-group id="userName"
                label="Enter your name or username:"
                     >
-            <b-form-input id="userName"
+            <b-form-input 
                     type="text"
                     v-model="form.name"
                     required
@@ -20,7 +20,7 @@
             <b-form-group id="userEmail"
             label="Enter your e-mail address"
                 >
-            <b-form-input id="userEmail"
+            <b-form-input
                     type="email"
                     v-model="form.email"
                     required
@@ -55,7 +55,7 @@
                               <b-button type="register" variant="primary">Register</b-button>&nbsp;
                          </div>
                        <div>
-                     <a href="#">Forgot password?</a>
+                         <router-link to="home"><a href="login">Already a member?</a></router-link>
                    </div>
                  </div>
                </b-form>
@@ -91,6 +91,8 @@ export default {
       languages: {},
       selectedOption: '',
       show: true,
+      loaderTrue: true,
+      loaderFalse: false,
     }
   },
   mounted() {
@@ -101,13 +103,17 @@ export default {
   },
   methods: {
     onSubmit () {
+            this.$store.dispatch('loader/setLoadingState', this.loaderTrue)
             let name = this.form.name
             let email = this.form.email
             let password = this.form.password
             let language = this.form.lange
       this.$store.dispatch('user/register', {name, email, password, language})
         .then(() => {
+          this.$store.dispatch('loader/setLoadingState', this.loaderFalse)
           this.$router.push('home')
+        }).catch(err => {
+          this.$store.dispatch('loader/setLoadingState', this.loaderFalse)
         })
     },
   }

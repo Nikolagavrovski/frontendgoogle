@@ -1,11 +1,11 @@
 <template>
     <div class="feed" ref="feed">
         <ul v-if="contact">
-            <infinite-loading spinner="bubbles" direction="top" @infinite="infiniteHandler" @distance="1000">
-                <div slot="spinner">Loading...</div>
-                <div slot="no-more">No more message</div>
-                <div slot="no-results">No results message</div>
-            </infinite-loading>
+              <infinite-loading  :identifier="infinityGetter" spinner="bubbles" direction="top" @infinite="infiniteHandler" @distance="1000">
+                            <div slot="spinner">Loading...</div>
+                            <div slot="no-more">No more message</div>
+                            <div slot="no-results">No results message</div>
+                    </infinite-loading>
             <li v-for="message in messages" v-bind:class="messageStatus(message.to, contact.id)" :key="message.id">
                 <div class="text">
                     {{ message.text}}
@@ -24,7 +24,8 @@ export default {
     computed: {
         ...mapGetters({
      currentPage:'messages/getCurrentPN',
-    })
+     infinityGetter: 'loader/infinityValue'
+    }),
     },
     props: {
         contact: {
@@ -33,15 +34,14 @@ export default {
         messages: {
             type: Array,
             required: true
-        },
-        page: {
-            type: Number,
         }
     },
     data () {
         return {
             messageSent: 'message sent',
             messageReceived: 'message received',
+            loaderFalse: false,
+            loaderTrue: true,
         }
     },
     methods: {
@@ -58,19 +58,22 @@ export default {
             }, 50)
         },
         infiniteHandler($state) {
-                    let userObject = JSON.parse(localStorage.getItem('user'))
-                    let currentUser =  userObject.id
-                    axios({ url: getConversationById + this.contact.id + '/' + currentUser + '?page=' + this.currentPage , method: 'GET'})
-                    .then(response => {
-                        console.log(this.currentPage)
-                        if (response.data.length != 0){
-                        this.$emit('newmessages', response.data.data)
-                        this.$store.dispatch('messages/incrementPage')
-                        $state.loaded()
-                        }
-                        $state.complete()
-                    })
-        }
+                        this.$store.dispatch('loader/setLoadingState', this.loaderTrue)
+                        let userObject = JSON.parse(localStorage.getItem('user'))
+                        let currentUser =  userObject.id
+                        axios({ url: getConversationById + this.contact.id + '/' + currentUser + '?page=' + this.currentPage , method: 'GET'})
+                        .then(response => {
+                            if (response.data.data.length != 0){
+                            this.$emit('newmessages', response.data.data)
+                            $state.loaded()
+                            this.$store.dispatch('messages/incrementPage')
+                            this.$store.dispatch('loader/setLoadingState', this.loaderFalse)
+                            } else {
+                            $state.complete()
+                            this.$store.dispatch('loader/setLoadingState', this.loaderFalse)
+                            }
+                        })
+        },
     },
     watch: {
         contact(contact) {

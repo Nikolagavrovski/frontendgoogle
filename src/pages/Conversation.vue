@@ -7,11 +7,9 @@
 </template>
 
 <script>
-
     import MessageFeed from './MessageFeed' 
     import MessageComposer from './MessageComposer'
     import {conversationMessageSend} from './../config'
-
 export default {
     components: {MessageFeed, MessageComposer},
     props: {
@@ -27,12 +25,15 @@ export default {
     methods: {
         sendMessage (text){
             if (!this.contact) {
-                alert('Ne postoji contact')
+                alert('Please select a contact before sending a message!')
             }
             let userObject = JSON.parse(localStorage.getItem('user'))
             axios({url: conversationMessageSend, data: {from: userObject.id, contact_id: this.contact.id, message: text}, method: 'POST'})
             .then(response => {
                 this.$emit('new', response.data)
+            }).catch(error => {
+                console.log(error)
+                alert('Error with the server. Please check your internet connection!')
             })
         },
         forwardnewmessage(data)

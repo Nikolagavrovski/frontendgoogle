@@ -31,11 +31,11 @@ Vue.component('app', App)
 var $ = require("jquery");
 
 const routes = [
-  {path: '/', component: LoginPage, name: 'home'},
+  {path: '/', component: LoginPage, name: 'home', meta: {}},
   {path: '/dashboard', component: DashboardPage, name: 'dashboard', meta: {requiresAuth: true}},
   {path: '/chat', component: ChatPage, name: 'chat', meta: {requiresAuth: true}},
-  {path: '/register', component: RegisterPage, name: 'register'},
-  {path: '*', redirect: '/' } // implement 'Page not found'
+  {path: '/register', component: RegisterPage, name: 'register', meta: {}},
+  {path: '*', redirect: 'chat' } // implement 'Page not found'
 ]
 
 const router = new VueRouter ({
@@ -44,15 +44,24 @@ const router = new VueRouter ({
 })
 
 router.beforeEach((to, from, next) => {
-  if(to.meta.requiresAuth) {
+  if(to.meta.requiresAuth) 
+  {
     let userObject = JSON.parse(window.localStorage.getItem('user'))
-    if (userObject) {
+    if (userObject) 
+    {
       next()
       return
     }
-    next('/login') 
-  } else {
-    next() 
+    next('/') 
+  } 
+  else 
+  { let userObject = JSON.parse(window.localStorage.getItem('user'))
+    if (userObject){ 
+      if (to.path == '/' || to.path == '/register') {
+        next('/chat')
+      }
+    }
+  next() 
   }
 })
 

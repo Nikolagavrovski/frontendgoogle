@@ -23,18 +23,21 @@ export default {
             form: {
                 lange: '',
             },
-            languages: {}
+            languages: {},
+            loaderTrue: true,
+            loaderFalse: false
         }
     },
     methods: {
-            onSubmit () {
+        onSubmit () {
             let newlanguage = this.form.lange
-      this.$store.dispatch('user/update', {newlanguage})
-        .then(() => {
-          
-            })
-        },
-    },
+            this.$store.dispatch('user/update', {newlanguage})
+            this.$store.dispatch('loader/setLoadingState', this.loaderTrue) 
+            .then(() => {
+                    this.$store.dispatch('loader/setLoadingState', this.loaderFalse)
+                })
+            },
+     },
 }
 </script>
 
